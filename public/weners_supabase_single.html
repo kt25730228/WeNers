@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>WeNers</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; background:#fafafa; margin:0; padding:0; }
+        header { padding:20px; text-align:center; font-size:26px; font-weight:bold; }
+        #productList { max-width:700px; margin:40px auto; }
+        .product-card { background:white; border-radius:10px; padding:20px; margin-bottom:15px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+        button { padding:8px 14px; background:#2563eb; color:#fff; border-radius:8px; border:none; cursor:pointer;}
+    </style>
+
+    <!-- ✔ Supabase JS 2.x CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        /* ✔ createClient 를 정상 사용하도록 수정 */
+        const client = supabase.createClient(
+            "https://wfgqdswcdwdvfaqwejmd.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndmZ3Fkc3djZHdkdmZhcXdlam1kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4MDc2NjcsImV4cCI6MjA4MDM4MzY2N30.Jb9nqalTEPp3Grwy3lnLczl6cE7gTSsK4Ol3hXGdl1Q"
+        );
+
+        /* ===============================
+           🔥 상품 불러오기
+        =============================== */
+        async function loadProducts() {
+            const { data, error } = await client
+                .from("products")
+                .select("id, title, description, price_start, price_end, buy_now")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                alert("❌ 상품 불러오기 실패");
+                console.error(error);
+                return;
+            }
+
+            if (!data.length) {
+                document.getElementById("productList").innerHTML =
+                    `<p style="text-align:center;color:#666;margin-top:50px;">
+                        📭 등록된 상품이 없습니다.
+                    </p>`;
+                return;
+            }
+
+            renderProducts(data);
+        }
+
+        /* ===============================
+           🔥 화면에 출력
+        =============================== */
+        function renderProducts(list) {
+            const area = document.getElementById("productList");
+            area.innerHTML = "";
+
+            list.forEach(p => {
+                let box = document.createElement("div");
+                box.className = "product-card";
+
+                box.innerHTML = `
+                    <h2>${p.title}</h2>
+                    <p>${p.description ?? ""}</p>
+
+                    <p><b>시작가:</b> ${p.price_start?.toLocaleString()}원</p>
+                    ${p.price_end ? `<p><b>종료가:</b> ${p.price_end.toLocaleString()}원</p>` : ""}
+                    ${p.buy_now ? `<p><b>즉시구매가:</b> ${p.buy_now.toLocaleString()}원</p>` : ""}
+
+                    <button>상세보기</button>
+                `;
+
+                area.appendChild(box);
+            });
+        }
+
+        window.onload = loadProducts;
+    </script>
+
+</head>
+<body>
+<header>💎 위너스 (WeNers)</header>
+<div id="productList"></div>
+</body>
+</html>
