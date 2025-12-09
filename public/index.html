@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>WeNers — 실시간 경매</title>
-
-<!-- Tailwind (dev CDN). 프로덕션에서는 컴파일 CSS 사용 권장 -->
+<title>WeNers – 실시간 경매</title>
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- 🔥 여기 추가 -->
+<script src="./config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(초기화 코드)
+</script>
 
 <style>
   /* 핵심 스타일 (원본 UI 느낌 재현) */
@@ -48,12 +53,6 @@
   .text-danger { color:#dc2626; }
 </style>
 </head>
-<body>
-<script src="./config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-    window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-</script>
 
 <header>
   <div class="container flex items-center justify-between">
@@ -515,6 +514,5 @@
   window._wn = { loadProducts, openCreateModal, closeCreateModal, openProductDetail };
 
 </script>
-<div id="app"></div>
 </body>
 </html>
